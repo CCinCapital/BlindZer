@@ -1,4 +1,5 @@
 // Preprocessors
+#include <ESP8266WiFi.h>
 #include <Servo.h>
 
 // Pin defination
@@ -12,13 +13,19 @@
 #define Low 300
 
 // Create global variables
-Servo myServo;
+const char* ssid = "CCnTT";
+const char* password = "!Gurute23394581";
 int reading = 0;
 int step_count = 0;
+
+// Create WiFi Server and Servo
+WiFiServer server(80);
+Servo myServo;
 
 // Run Once
 void setup() {
   //Serial.begin(115200);
+  delay(10);
   
   // Define input and output
   pinMode(D1, OUTPUT);
@@ -35,6 +42,21 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(D5),ISR_1, HIGH);
   attachInterrupt(digitalPinToInterrupt(D6),ISR_2, HIGH);
 
+  // Connecting to Router
+  Serial.println();
+  Serial.println("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+  Serial.println("WiFi Connected.");
+  
+  server.begin();
+  Serial.println("Server started.");
+  
   // Start up test
   digitalWrite(D1, HIGH);
   delay(15);
@@ -49,10 +71,74 @@ void setup() {
   blindsControl(70,59);
   delay(15);
   digitalWrite(D1, LOW);
+
+  Serial.print("Use this URL to connect: ");
+  Serial.print("http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("/");
 }
 
 void loop() {
-  yield();
+  // Check if a client has connected
+  WiFiClient client = server.available();
+  if (!client) {
+    return;
+  }
+  
+  // Wait until the client sends some data
+  Serial.println("new client");
+  while(!client.available()){
+    delay(1);
+  }
+  
+  // Read the first line of the request
+  String request = client.readStringUntil('\r');
+  Serial.println(request);
+  client.flush();
+  
+  // Match the request
+  
+  int value = 0;
+  if (request.indexOf("/Servo=OFF") != -1)  {
+    blindsControl(92,1);
+    value = 0;
+  }
+  if (request.indexOf("/Servo=UP") != -1)  {
+    blindsControl(110,59);
+    value = 1;
+  }
+  if (request.indexOf("/Servo=DOWN") != -1)  {
+    blindsControl(70,59);
+    value = 2;
+  }
+  
+  
+  // Return the response
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-Type: text/html");
+  client.println(""); //  do not forget this one
+  client.println("<!DOCTYPE HTML>");
+  client.println("<html>");
+  
+  client.print("Servo is now: ");
+  
+  if(value == 1) {
+    client.print("Rolling UP");
+  } else if(value == 2){
+    client.print("Rolling DOWN");
+  } else {
+    client.print("Turned OFF");
+  }
+  client.println("<br><br>");
+  client.println("<a href=\"/Servo=UP\"\"><button>Turn UP </button></a>");
+  client.println("<a href=\"/Servo=DOWN\"\"><button>Turn DOWN </button></a>");
+  client.println("<a href=\"/Servo=OFF\"\"><button>Turn Off </button></a><br />");  
+  client.println("</html>");
+  
+  delay(1);
+  Serial.println("Client disonnected");
+  Serial.println("");
+
 }
 
 /*  Method that controls the motion of blinder
