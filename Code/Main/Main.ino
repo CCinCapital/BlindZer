@@ -1,3 +1,23 @@
+/*  
+ *   ----------------------------About---------------------------- 
+ *   This Program controls a wireless enabled device that rolls window blinds
+ *   -- Author: Can Chen 
+ *   -- More Details at: https://github.com/CCinCapital/Blinder/
+ *   
+ *   ----------------------------Brief----------------------------
+ *   User may send commands remotely(HTTP request) to the servo to control its behavior  
+ *   
+ *   --------------------------Hareware---------------------------- 
+ *   The device contains : 
+ *    - one NodeMCU v0.9 (ESP8266-12) 
+ *    - one TowerPro MG996R Servo
+ *    - one NMOS
+ *    - two Push Button
+ *   ***************************Note*******************************
+ *     Make sure to modify SSID(Line 54) and PASSWORD(Line 55) 
+ *     to connect the device to your local WLAN
+ */
+
 // Preprocessors
 #include <ESP8266WiFi.h>
 #include <Servo.h>
@@ -14,15 +34,25 @@
 #define D9 3
 #define D10 1
 
-// Interrrupter Trigger threshold
-#define High 700
-#define Low 300
+// optical Interrrupter Trigger threshold
+#define IR_Through 700
+#define IR_Blocked 300
 
-// Create global variables
+// servo rotation direction and default steps
+/* 
+ *  Note: Servo was modified to think it's always at the middle (92) position
+ *        so, number greater than 92 will cause it to rotate clockwise
+ *        and number smaller than 92 will cause it to rotate counter clockwise
+ *        by writing 92 to the servo will cause it to stop (idealy)
+ *        -- the difference between numbers determines the rotation speed
+*/       
+#define Servo_Clockwise 110
+#define Servo_Counter_Clockwise 70
+#define Servo_Default_Steps 59    // One full rotation of the servo (determined by the Optical Encoder Whell's resulotion)
+
+// SSID and Password used to connect to Router
 const char* ssid = "CCnTT";
 const char* password = "!Gurute23394581";
-int reading = 0;
-int step_count = 0;
 
 // Create WiFi Server and Servo
 WiFiServer server(80);
@@ -30,25 +60,27 @@ Servo myServo;
 
 // Run Once
 void setup() {
+  // Set the baud rate for Serial communication between Board and PC
   Serial.begin(115200);
   delay(10);
   
-  // Define input and output
-  pinMode(D1, OUTPUT);
-  pinMode(D2, OUTPUT);
+  // Port Directions
+  pinMode(D1, OUTPUT);              // NMOS
+  pinMode(D2, OUTPUT);              // Servo
   
-  pinMode(A0, INPUT);
-  pinMode(D4, INPUT_PULLUP);
-  pinMode(D9, INPUT_PULLUP);
+  pinMode(A0, INPUT);               // Optical Interrupter
+  pinMode(D4, INPUT_PULLUP);        // Push button 1 (Pull-Down)
+  pinMode(D9, INPUT_PULLUP);        // Push button 2 (Pull-Down)
 
-  // Attach servo to pin
+  // Attach servo to pin D2
   myServo.attach(D2);
 
-  // Attach interrupts to corresponding push buttons
+  // Set interrupt listener
+  // ([Pin to listen], [Function to run upon event], [Event to listen])
   attachInterrupt(digitalPinToInterrupt(D4),ISR_1, FALLING);
   attachInterrupt(digitalPinToInterrupt(D9),ISR_2, FALLING);
 
-  // Connecting to Router
+  // Connecting to Router & Print out the status though Serial terminal
   Serial.println();
   Serial.println("Connecting to ");
   Serial.println(ssid);
@@ -64,16 +96,16 @@ void setup() {
   Serial.println("Server started.");
   
   // Start up test
-  Serial.println("Starting Test Servo");
+  Serial.println("Start Servo Test");
   digitalWrite(D1, HIGH);
   delay(15);
-  blindsControl(110,59);
+  blindsControl(Servo_Clockwise,Servo_Default_Steps);
   delay(15);
   digitalWrite(D1, LOW);
   delay(15);
   digitalWrite(D1, HIGH);
   delay(15);
-  blindsControl(70,59);
+  blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
   delay(15);
   digitalWrite(D1, LOW);
   Serial.println("Servo Test Finished");
@@ -96,21 +128,8 @@ void loop() {
   while(!client.available()){
     delay(1);
   }
-  
-  // Read the first line of the request
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
-    
-  // Match the request
-  if (request.indexOf("/Servo=UP") != -1)  {
-    blindsControl(110,59);
-  }
-  if (request.indexOf("/Servo=DOWN") != -1)  {
-    blindsControl(70,59);
-  }
-  
-  // Return the response
+
+  // Send the HTTP webpage to client
   client.println("HTTP/1.1 200 OK");
   client.println("Content-Type: text/html");
   client.println(""); //  do not forget this one
@@ -122,56 +141,83 @@ void loop() {
   client.println("<a href=\"/Servo=DOWN\"\"><button>Roll DOWN </button></a>");
   client.println("</html>");
   
+  // Read the first line of the client's request
+  String request = client.readStringUntil('\r');
+  Serial.println(request);
+  client.flush();
+    
+  // Match the request
+  if (request.indexOf("/Servo=UP") != -1)  {
+    blindsControl(Servo_Clockwise,Servo_Default_Steps);
+  }
+  if (request.indexOf("/Servo=DOWN") != -1)  {
+    blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
+  }
+  
   delay(1);
   Serial.println("Client disonnected");
   Serial.println("");
-
 }
 
-/*  Method that controls the motion of blinder
- * 
+/*  --Method that controls the motion of Servo--
+ *  INPUT:  roller direction
+ *          steps to rotate
+ *  OUTPUT: Debugging information through serial
+ *  RETURN: None
  */
-void blindsControl(int roller_direction, int steps) {
-  //Serial.println("defining parameters");
-  boolean previous_position = false;
-  boolean current_position = false;
-  int interrupter_reading = analogRead(A0);
-  int step_count = 0;
-  //Serial.println("entering loop");
-  while(step_count < steps){
-    if (interrupter_reading >= High) {
-      current_position = true;
+void blindsControl(int Roller_Direction, int Steps) {
+  // Declare local variables
+  int IR_Reading = analogRead(A0);    
+  int Previous_Servo_Staus = IR_Reading;            // 1 => IR signal blocked (Optical Interrupter)
+  int Current_Servo_Staus = Previous_Servo_Staus;   // 2 => IR signal through (Optical Interrupter)
+  
+  digitalWrite(D1, HIGH);                 // Power Up Servo (Close the NMOS switch)
+  delay(15);                              // Wait Servo to Boot Up
+  myServo.write(Roller_Direction);        // Give Servo direction to rotate
+  
+  int Steps_Count = 0;
+  while(Steps_Count < Steps){
+    //Serial.println("Rotating");
+    
+    // Read status of Optical Interrupter 
+    IR_Reading = analogRead(A0);   
+    // Compare the reading to Triggering Threshold
+    // Store the current servo status if conditions are met       
+    if (IR_Reading >= IR_Through) {
+      Current_Servo_Staus = IR_Through;
     }
-    else if (interrupter_reading <= Low) {
-      current_position = false;
+    else if (IR_Reading <= IR_Blocked) {
+      Current_Servo_Staus = IR_Blocked;
     }
-    if (previous_position != current_position) {
-      previous_position = current_position;
-      step_count += 1;
+
+    // Compare the previous servo staus and its current status
+    // if difference were found, record new status, increment step count
+    if (Previous_Servo_Staus != Current_Servo_Staus) {
+      Previous_Servo_Staus = Current_Servo_Staus;
+      Steps_Count += 1;
     }
-    //Serial.println("in loop");
-    digitalWrite(D1, HIGH);
-    delay(15);
-    myServo.write(roller_direction);
-    interrupter_reading = analogRead(A0);
-    //Serial.println(interrupter_reading);
   }
-  //Serial.println("stopping servo");
-  myServo.write(92);
-  delay(15);
-  digitalWrite(D1, LOW);
+  digitalWrite(D1, LOW);                  // Power Down Servo (Open the NMOS switch)
   //Serial.println("servo stopped");
 }
 
-// Interrupt Service Routine one
+/* --Interrupt Service Routine ONE--
+ * --Turn Servo Clockwise about # of Steps(Default)--
+ * INPUT: NONE 
+ * OUTPUT: NONE
+ * RETURN: NONE
+ */
 void ISR_1() {
-  //Serial.println(digitalRead(D4));
-  blindsControl(110,59);
+  blindsControl(Servo_Clockwise,Servo_Default_Steps);
 }
 
-// Interrupt Service Routine two
+/* --Interrupt Service Routine TWO--
+ * --Turn Servo Counter Clockwise about # of Steps(Default)--
+ * INPUT: NONE 
+ * OUTPUT: NONE
+ * RETURN: NONE
+ */
 void ISR_2() {
-  //Serial.println(digitalRead(D9));
-  blindsControl(70,59);
+  blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
 }
 
