@@ -1,19 +1,26 @@
+// Preprocessors
 #include <Servo.h>
+
+// Pin defination
 #define D1 5
 #define D2 4
 #define D5 14
 #define D6 12
 
+// Interrrupter Trigger threshold
 #define High 700
 #define Low 300
 
+// Create global variables
 Servo myServo;
 int reading = 0;
 int step_count = 0;
 
+// Run Once
 void setup() {
-  Serial.begin(115200);
-  // put your setup code here, to run once:
+  //Serial.begin(115200);
+  
+  // Define input and output
   pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
   
@@ -21,11 +28,14 @@ void setup() {
   pinMode(D5, INPUT);
   pinMode(D6, INPUT);
 
+  // Attach servo to pin
   myServo.attach(D2);
 
+  // Attach interrupts to corresponding push buttons
   attachInterrupt(digitalPinToInterrupt(D5),ISR_1, HIGH);
   attachInterrupt(digitalPinToInterrupt(D6),ISR_2, HIGH);
-  
+
+  // Start up test
   digitalWrite(D1, HIGH);
   delay(15);
   blindsControl(110,59);
@@ -45,6 +55,9 @@ void loop() {
   yield();
 }
 
+/*  Method that controls the motion of blinder
+ * 
+ */
 void blindsControl(int roller_direction, int steps) {
   //Serial.println("defining parameters");
   boolean previous_position = false;
@@ -76,13 +89,15 @@ void blindsControl(int roller_direction, int steps) {
   //Serial.println("servo stopped");
 }
 
+// Interrupt Service Routine one
 void ISR_1() {
-  Serial.println("D5 Interrupted");
+  //Serial.println("D5 Interrupted");
   blindsControl(110,59);
 }
 
+// Interrupt Service Routine two
 void ISR_2() {
-  Serial.println("D6 Interrupted");
+  //Serial.println("D6 Interrupted");
   blindsControl(70,59);
 }
 
