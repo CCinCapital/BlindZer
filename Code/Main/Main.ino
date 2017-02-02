@@ -46,9 +46,9 @@
  *        by writing 92 to the servo will cause it to stop (idealy)
  *        -- the difference between numbers determines the rotation speed
 */       
-#define Servo_Clockwise 110
-#define Servo_Counter_Clockwise 70
-#define Servo_Default_Steps 59    // One full rotation of the servo (determined by the Optical Encoder Whell's resulotion)
+#define Servo_Clockwise 70
+#define Servo_Counter_Clockwise 110
+#define Servo_Half_Cycle 30    // One full rotation of the servo (determined by the Optical Encoder Whell's resulotion)
 
 // SSID and Password used to connect to Router
 const char* ssid = "CCnTT";
@@ -99,13 +99,13 @@ void setup() {
   Serial.println("Start Servo Test");
   digitalWrite(D1, HIGH);
   delay(15);
-  blindsControl(Servo_Clockwise,Servo_Default_Steps);
+  blindsControl(Servo_Clockwise,Servo_Half_Cycle);
   delay(15);
   digitalWrite(D1, LOW);
   delay(15);
   digitalWrite(D1, HIGH);
   delay(15);
-  blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
+  blindsControl(Servo_Counter_Clockwise,Servo_Half_Cycle);
   delay(15);
   digitalWrite(D1, LOW);
   Serial.println("Servo Test Finished");
@@ -128,6 +128,19 @@ void loop() {
   while(!client.available()){
     delay(1);
   }
+  
+  // Read the first line of the client's request
+  String request = client.readStringUntil('\r');
+  Serial.println(request);
+  client.flush();
+    
+  // Match the request
+  if (request.indexOf("/Servo=UP") != -1)  {
+    blindsControl(Servo_Clockwise,Servo_Half_Cycle);
+  }
+  if (request.indexOf("/Servo=DOWN") != -1)  {
+    blindsControl(Servo_Counter_Clockwise,Servo_Half_Cycle);
+  }
 
   // Send the HTTP webpage to client
   client.println("HTTP/1.1 200 OK");
@@ -140,20 +153,7 @@ void loop() {
   client.println("<a href=\"/Servo=UP\"\"><button>Roll UP </button></a>");
   client.println("<a href=\"/Servo=DOWN\"\"><button>Roll DOWN </button></a>");
   client.println("</html>");
-  
-  // Read the first line of the client's request
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
-    
-  // Match the request
-  if (request.indexOf("/Servo=UP") != -1)  {
-    blindsControl(Servo_Clockwise,Servo_Default_Steps);
-  }
-  if (request.indexOf("/Servo=DOWN") != -1)  {
-    blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
-  }
-  
+ 
   delay(1);
   Serial.println("Client disonnected");
   Serial.println("");
@@ -172,12 +172,11 @@ void blindsControl(int Roller_Direction, int Steps) {
   int Current_Servo_Staus = Previous_Servo_Staus;   // 2 => IR signal through (Optical Interrupter)
   
   digitalWrite(D1, HIGH);                 // Power Up Servo (Close the NMOS switch)
-  delay(15);                              // Wait Servo to Boot Up
+  delay(5);                              // Wait Servo to Boot Up
   myServo.write(Roller_Direction);        // Give Servo direction to rotate
   
   int Steps_Count = 0;
   while(Steps_Count < Steps){
-    //Serial.println("Rotating");
     
     // Read status of Optical Interrupter 
     IR_Reading = analogRead(A0);   
@@ -197,6 +196,8 @@ void blindsControl(int Roller_Direction, int Steps) {
       Steps_Count += 1;
     }
   }
+  myServo.write(92);
+  delay(5);
   digitalWrite(D1, LOW);                  // Power Down Servo (Open the NMOS switch)
   //Serial.println("servo stopped");
 }
@@ -208,7 +209,7 @@ void blindsControl(int Roller_Direction, int Steps) {
  * RETURN: NONE
  */
 void ISR_1() {
-  blindsControl(Servo_Clockwise,Servo_Default_Steps);
+  blindsControl(Servo_Clockwise,Servo_Half_Cycle);
 }
 
 /* --Interrupt Service Routine TWO--
@@ -218,6 +219,6 @@ void ISR_1() {
  * RETURN: NONE
  */
 void ISR_2() {
-  blindsControl(Servo_Counter_Clockwise,Servo_Default_Steps);
+  blindsControl(Servo_Counter_Clockwise,Servo_Half_Cycle);
 }
 
