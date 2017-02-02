@@ -5,8 +5,14 @@
 // Pin defination
 #define D1 5
 #define D2 4
+#define D3 0
+#define D4 2
 #define D5 14
 #define D6 12
+#define D7 13
+#define D8 15
+#define D9 3
+#define D10 1
 
 // Interrrupter Trigger threshold
 #define High 700
@@ -24,7 +30,7 @@ Servo myServo;
 
 // Run Once
 void setup() {
-  //Serial.begin(115200);
+  Serial.begin(115200);
   delay(10);
   
   // Define input and output
@@ -32,15 +38,15 @@ void setup() {
   pinMode(D2, OUTPUT);
   
   pinMode(A0, INPUT);
-  pinMode(D5, INPUT);
-  pinMode(D6, INPUT);
+  pinMode(D4, INPUT_PULLUP);
+  pinMode(D9, INPUT_PULLUP);
 
   // Attach servo to pin
   myServo.attach(D2);
 
   // Attach interrupts to corresponding push buttons
-  attachInterrupt(digitalPinToInterrupt(D5),ISR_1, HIGH);
-  attachInterrupt(digitalPinToInterrupt(D6),ISR_2, HIGH);
+  attachInterrupt(digitalPinToInterrupt(D4),ISR_1, HIGH);
+  attachInterrupt(digitalPinToInterrupt(D9),ISR_2, HIGH);
 
   // Connecting to Router
   Serial.println();
@@ -58,6 +64,7 @@ void setup() {
   Serial.println("Server started.");
   
   // Start up test
+  Serial.println("Starting Test Servo");
   digitalWrite(D1, HIGH);
   delay(15);
   blindsControl(110,59);
@@ -71,6 +78,7 @@ void setup() {
   blindsControl(70,59);
   delay(15);
   digitalWrite(D1, LOW);
+  Serial.println("Servo Test Finished");
 
   Serial.print("Use this URL to connect: ");
   Serial.print("http://");
@@ -167,6 +175,7 @@ void blindsControl(int roller_direction, int steps) {
     delay(15);
     myServo.write(roller_direction);
     interrupter_reading = analogRead(A0);
+    //Serial.println(interrupter_reading);
   }
   //Serial.println("stopping servo");
   myServo.write(92);
