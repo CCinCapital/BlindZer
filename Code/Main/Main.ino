@@ -45,8 +45,8 @@ void setup() {
   myServo.attach(D2);
 
   // Attach interrupts to corresponding push buttons
-  attachInterrupt(digitalPinToInterrupt(D4),ISR_1, HIGH);
-  attachInterrupt(digitalPinToInterrupt(D9),ISR_2, HIGH);
+  attachInterrupt(digitalPinToInterrupt(D4),ISR_1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(D9),ISR_2, FALLING);
 
   // Connecting to Router
   Serial.println();
@@ -68,8 +68,6 @@ void setup() {
   digitalWrite(D1, HIGH);
   delay(15);
   blindsControl(110,59);
-  delay(15);
-  blindsControl(92,1);
   delay(15);
   digitalWrite(D1, LOW);
   delay(15);
@@ -103,23 +101,14 @@ void loop() {
   String request = client.readStringUntil('\r');
   Serial.println(request);
   client.flush();
-  
+    
   // Match the request
-  
-  int value = 0;
-  if (request.indexOf("/Servo=OFF") != -1)  {
-    blindsControl(92,1);
-    value = 0;
-  }
   if (request.indexOf("/Servo=UP") != -1)  {
     blindsControl(110,59);
-    value = 1;
   }
   if (request.indexOf("/Servo=DOWN") != -1)  {
     blindsControl(70,59);
-    value = 2;
   }
-  
   
   // Return the response
   client.println("HTTP/1.1 200 OK");
@@ -127,20 +116,10 @@ void loop() {
   client.println(""); //  do not forget this one
   client.println("<!DOCTYPE HTML>");
   client.println("<html>");
-  
-  client.print("Servo is now: ");
-  
-  if(value == 1) {
-    client.print("Rolling UP");
-  } else if(value == 2){
-    client.print("Rolling DOWN");
-  } else {
-    client.print("Turned OFF");
-  }
+  client.print("Please choose the operation of Servo:");
   client.println("<br><br>");
-  client.println("<a href=\"/Servo=UP\"\"><button>Turn UP </button></a>");
-  client.println("<a href=\"/Servo=DOWN\"\"><button>Turn DOWN </button></a>");
-  client.println("<a href=\"/Servo=OFF\"\"><button>Turn Off </button></a><br />");  
+  client.println("<a href=\"/Servo=UP\"\"><button>Roll UP </button></a>");
+  client.println("<a href=\"/Servo=DOWN\"\"><button>Roll DOWN </button></a>");
   client.println("</html>");
   
   delay(1);
@@ -186,13 +165,13 @@ void blindsControl(int roller_direction, int steps) {
 
 // Interrupt Service Routine one
 void ISR_1() {
-  //Serial.println("D5 Interrupted");
+  //Serial.println(digitalRead(D4));
   blindsControl(110,59);
 }
 
 // Interrupt Service Routine two
 void ISR_2() {
-  //Serial.println("D6 Interrupted");
+  //Serial.println(digitalRead(D9));
   blindsControl(70,59);
 }
 
