@@ -177,6 +177,8 @@ void blindsControl(int Roller_Direction, int Steps) {
   
   int Steps_Count = 0;
   while(Steps_Count < Steps){
+    //Serial.println("Rotating ");
+    //Serial.print(Steps_Count);
     
     // Read status of Optical Interrupter 
     IR_Reading = analogRead(A0);   
