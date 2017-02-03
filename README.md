@@ -19,9 +19,9 @@ Wireless enabled Window Blinds Roller<br>
     1. Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
     
        ----- Part Assembly -----
-    2. Navigate to "../3D STL Files" folder of this project
+    2. Navigate to "../3D STL Files/" folder of this project
     3. 3D print all the .STL part at 1:1 ratio [mm]
-    4. Assemble the 3D printed part refer to the instruction
+    4. Assemble the 3D printed part refer to the instruction in "../Assembling Instruction/"
 ####Software
     1. Clone or Download this repository
     2. Install the runtime environment
@@ -45,13 +45,13 @@ Wireless enabled Window Blinds Roller<br>
     1. Open the URL in a WebBrwoser
     
        ----- Control using Python GUI -----
-    2. Run the GUIhttpRequest.py
+    1. Run the GUIhttpRequest.py
 ##TODO
-    ----- Firmware -----
+       ----- Firmware -----
     - Remember current position
     - implement Sleep(); and Weakup();
     
-    ----- Python -----
+       ----- Python -----
     - Automatically control the BlindZer based on weather/time/Sun Height information
 ##Contributing
     + Fork it
