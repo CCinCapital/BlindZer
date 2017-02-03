@@ -9,6 +9,7 @@ Wireless enabled Window Blinds Roller
     + TowerPro MG996R Servo
     + IRL2703 or any NMOS that able to drive Id > 500ma when Vgs = 3.3v
     + TCST2103 Optical Interrupter
+    + Resistors [2K x1 ; 3.3K x1]
 ###Installation
     1. Clone or Download this repository
     2.  - Install the runtime environment
