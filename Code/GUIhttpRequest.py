@@ -9,6 +9,7 @@ class Application(Frame):
                 """Initialize the Frame"""
                 Frame.__init__(self,master)
                 self.grid()
+                self.IP = "192.168.0.125"
                 self.create_widgets()
 
         def create_widgets(self):
@@ -29,10 +30,10 @@ class Application(Frame):
                 self.button_2["command"] = self.send_http_request_2
                 self.button_2.grid(row=1, column=1, columnspan=1, sticky=E)
         def send_http_request_1(self):
-                conn = httplib.HTTPConnection("192.168.0.125")
+                conn = httplib.HTTPConnection(self.IP)
                 conn.request("PUT","/Servo=UP")
         def send_http_request_2(self):
-                conn = httplib.HTTPConnection("192.168.0.125")
+                conn = httplib.HTTPConnection(self.IP)
                 conn.request("PUT","/Servo=DOWN")
 
 root = Tk()
