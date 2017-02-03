@@ -1,4 +1,4 @@
-# BlindZer
+# BlindZer [In Progress]
 Wireless enabled Window Blinds Roller
 
 ##Installation
