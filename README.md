@@ -3,11 +3,11 @@ Wireless enabled Window Blinds Roller
 
 ##Installation
 TODO: Brief explain
-####Software Requirement
+#### Software Requirement
 + Arduino IDE
-* ESP8266 Board Support package installed
-+ Python 
-####Hardware Requirement
++ ESP8266 Board Support package installed
++ Python
+#### Hardware Requirement
 + Node MCU v0.9
 + TowerPro MG996R Servo
 ##Usage
