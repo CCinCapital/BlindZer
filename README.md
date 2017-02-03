@@ -1,7 +1,6 @@
 # BlindZer [In Progress]
 Wireless enabled Window Blinds Roller
-##Installation
-TODO: Brief explain
+
 ### Software Requirement
     + Arduino IDE with ESP8266 Board Support package installed
     + Python
@@ -10,8 +9,27 @@ TODO: Brief explain
     + TowerPro MG996R Servo
     + IRL2703 or any NMOS that able to drive Id > 500ma when Vgs = 3.3v
     + TCST2103 Optical Interrupter
+###Installation
+    1. Clone or Download this repository
+    2.  - Install the runtime environment
+        - Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
+        
+       ----- Modify Arduino Code -----
+    3. Navigate to the Code at ../Code/Main/Main.ino
+    4. Modify the code (Change the SSID and PASSWORD parameter) 
+    5. Upload code to your board and observe the Serial Terminal to find line "Use this URL to connect: http://xxx.xxx.xxx.xxx"
+    6. Record the URL
+  
+       ----- Modify Python Code -----
+    7. Navigate to the Script at ../Code/GUIhttpRequest.py   
+    8. Edit the Code and change the [self.IP = "xxx.xxx.xxx.xxx"] parameter to the IP recorded (URL without 'http://')
+
 ##Usage
-TODO: Brief explain
+       ----- Control using Webpage -----    
+    1. Open the URL in a WebBrwoser
+    
+       ----- Control using Python GUI -----
+    2. Run the GUIhttpRequest.py
 ##Contributing
 TODO: Brief explain
 ##Credits
