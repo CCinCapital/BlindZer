@@ -2,6 +2,8 @@
 Wireless enabled Window Blinds Roller<br>
 ###Video DEMO
 [to be inserted HERE]
+###Assembly Preview
+<a href="https://github.com/CCinCapital/BlindZer/blob/master/3D%20STL%20Files/Assemly_PREVIEW.STL">Click Here</a>
 
 ### Software Requirement
     + Arduino IDE with ESP8266 Board Support package installed
