@@ -11,10 +11,11 @@ Wireless enabled Window Blinds Roller<br>
 ### Hardware Requirement
     + Access to 3D printer
     + Node MCU v0.9
-    + TowerPro MG996R Servo
+    + TowerPro MG996R Servo Pack
     + IRL2703 or any NMOS that able to drive Id > 500ma when Vgs = 3.3v
     + TCST2103 Optical Interrupter
     + Resistors [2K x1 ; 3.3K x1]
+    + Scerw [M3 x1 ; Wall Mounting x2 ]
 ###Installation
 ####Hardware
        ----- Circuit -----
