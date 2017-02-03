@@ -1,5 +1,6 @@
 # BlindZer [In Progress]
-Wireless enabled Window Blinds Roller
+Wireless enabled Window Blinds Roller<br>
+Video DEMO: HERE
 
 ### Software Requirement
     + Arduino IDE with ESP8266 Board Support package installed
