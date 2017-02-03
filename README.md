@@ -7,8 +7,8 @@ TODO: Brief explain
 + Arduino IDE with ESP8266 Board Support package installed<br/>
 + Python<br/>
 #### Hardware Requirement
-Node MCU v0.9
-TowerPro MG996R Servo
++ Node MCU v0.9
++ TowerPro MG996R Servo
 ##Usage
 TODO: Brief explain
 ##Contributing
