@@ -21,7 +21,7 @@ Wireless enabled Window Blinds Roller<br>
     + Scerw [M3 x1 ; Wall Mounting x2 ]
     + Soldering Station & Solder & Flux
     + Phillip screwdriver 
-    + Wire cutter & 
+    + Wire cutter & Pilers
 ###Installation
 ####Hardware
        ----- Circuit -----
