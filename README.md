@@ -4,7 +4,8 @@ Wireless enabled Window Blinds Roller<br>
 [to be inserted HERE]
 ###Assembly Preview
 <a href="https://github.com/CCinCapital/BlindZer/blob/master/3D%20STL%20Files/Assemly_PREVIEW.STL">Click Here</a>
-
+### Compatibility
+    + Window Blinds with hexagonal Rod. [Rod thickness: 8mm edge to edge]
 ### Software Requirement
     + Arduino IDE with ESP8266 Board Support package installed
     + Python
