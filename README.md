@@ -12,20 +12,29 @@ Wireless enabled Window Blinds Roller<br>
 ### Hardware Requirement
     + Access to 3D printer
     + Node MCU v0.9
-    + TowerPro MG996R Servo Pack
+    + TowerPro MG996R Servo Pack [Modified for continous rotation]
     + IRL2703 or any NMOS that able to drive Id > 500ma when Vgs = 3.3v
     + TCST2103 Optical Interrupter
-    + Resistors [2K x1 ; 3.3K x1]
+    + Few Resistors [2K x1 ; 2.2K x2; 3.3K x1; ]
+    + Breadboard or Protoboard
+    + Jumper wires
     + Scerw [M3 x1 ; Wall Mounting x2 ]
+    + Soldering Station & Solder & Flux
+    + Phillip screwdriver 
+    + Wire cutter & 
 ###Installation
 ####Hardware
        ----- Circuit -----
     1. Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
     
        ----- Part Assembly -----
-    2. Navigate to "../3D STL Files/" folder of this project
-    3. 3D print all the .STL part at 1:1 ratio [mm]
-    4. Assemble the 3D printed part refer to the instruction in "../Assembling Instruction/"
+    1. Navigate to "../3D STL Files/" folder of this project
+    2. 3D print all the .STL part at 1:1 ratio [mm]
+    3. Assemble the 3D printed part refer to the instruction in "../Assembling Instruction/"
+    
+       ----- Modify the Servo -----
+    1. Modify the servo for continous rotation [Follow the instruction below]
+<a href="http://www.instructables.com/id/How-to-hack-a-servo-for-continuous-rotation-Towe/?ALLSTEPS">Click here to learn "How to modify a servo for continous rotation?"</a>
 ####Software
     1. Clone or Download this repository
     2. Install the runtime environment
