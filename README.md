@@ -37,11 +37,22 @@ Wireless enabled Window Blinds Roller<br>
     8. Edit the Code and change the [self.IP = "xxx.xxx.xxx.xxx"] parameter to the IP recorded (URL without 'http://')
 
 ##Usage
+       ----- Powering the BlindZer -----
+    1. Use USB cable (directly plug into the onboard usb jack of NodeMCU)
+    2. Powering using 4 x AA battery through the 2Pin header (see schematic)
+
        ----- Control using Webpage -----    
     1. Open the URL in a WebBrwoser
     
        ----- Control using Python GUI -----
     2. Run the GUIhttpRequest.py
+##TODO
+    ----- Firmware -----
+    - Remember current position
+    - implement Sleep(); and Weakup();
+    
+    ----- Python -----
+    - Automatically control the BlindZer based on weather/time/Sun Height information
 ##Contributing
     + Fork it
 ##Credits
