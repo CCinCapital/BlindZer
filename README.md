@@ -4,8 +4,7 @@ Wireless enabled Window Blinds Roller
 ##Installation
 TODO: Brief explain
 #### Software Requirement
-+ Arduino IDE<br/>
-+ ESP8266 Board Support package installed<br/>
++ Arduino IDE with ESP8266 Board Support package installed<br/>
 + Python<br/>
 #### Hardware Requirement
 Node MCU v0.9
