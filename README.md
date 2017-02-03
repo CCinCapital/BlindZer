@@ -5,16 +5,25 @@ Wireless enabled Window Blinds Roller
     + Arduino IDE with ESP8266 Board Support package installed
     + Python
 ### Hardware Requirement
+    + Access to 3D printer
     + Node MCU v0.9
     + TowerPro MG996R Servo
     + IRL2703 or any NMOS that able to drive Id > 500ma when Vgs = 3.3v
     + TCST2103 Optical Interrupter
     + Resistors [2K x1 ; 3.3K x1]
 ###Installation
+####Hardware
+       ----- Circuit -----
+    1. Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
+    
+       ----- Part Assembly -----
+    2. Navigate to "../3D STL Files" folder of this project
+    3. 3D print all the .STL part at 1:1 ratio [mm]
+    4. Assemble the 3D printed part refer to the instruction
+####Software
     1. Clone or Download this repository
-    2.  - Install the runtime environment
-        - Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
-        
+    2. Install the runtime environment
+    
        ----- Modify Arduino Code -----
     3. Navigate to the Code at ../Code/Main/Main.ino
     4. Modify the code (Change the SSID and PASSWORD parameter) 
