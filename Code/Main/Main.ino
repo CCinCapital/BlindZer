@@ -51,8 +51,8 @@
 #define Servo_Half_Cycle 30    // One full rotation of the servo (determined by the Optical Encoder Whell's resulotion)
 
 // SSID and Password used to connect to Router
-const char* ssid = "CCnTT";
-const char* password = "!Gurute23394581";
+const char* ssid = "YourWiFiNameHere";
+const char* password = "YourWiFiPasswordHere";
 
 // Create WiFi Server and Servo
 WiFiServer server(80);
