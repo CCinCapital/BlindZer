@@ -1,5 +1,6 @@
 # BlindZer [In Progress]
 Wireless enabled Window Blinds Roller<br>
+<img src="http://thingiverse-production-new.s3.amazonaws.com/renders/1b/4c/5b/7c/6b/9c8a4cd324916dcc4e85334bb4fedf4f_preview_featured.JPG"></img>
 ###Video DEMO
 [to be inserted HERE]
 ###Assembly Preview
