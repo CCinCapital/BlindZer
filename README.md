@@ -1,9 +1,11 @@
 # BlindZer
 Wireless enabled Window Blinds Roller<br>
 <img src="http://thingiverse-production-new.s3.amazonaws.com/renders/1b/4c/5b/7c/6b/9c8a4cd324916dcc4e85334bb4fedf4f_preview_featured.JPG"></img>
-###Video DEMO
+<br>
+
+### Video DEMO
 [to be inserted HERE]
-###Assembly Preview
+### Assembly Preview
 <a href="https://github.com/CCinCapital/BlindZer/blob/master/3D%20STL%20Files/Assemly_PREVIEW.STL">Click Here</a>
 ### Compatibility
     + Window Blinds with hexagonal Rod. [Rod thickness: 8mm edge to edge]
@@ -23,8 +25,8 @@ Wireless enabled Window Blinds Roller<br>
     + Soldering Station & Solder & Flux
     + Phillip screwdriver 
     + Wire cutter & Pilers
-###Installation
-####Hardware
+### Installation
+#### Hardware
        ----- Circuit -----
     1. Build the circuit by refering ../Schematic/BlindZer_Sche.pdf
     
@@ -36,7 +38,7 @@ Wireless enabled Window Blinds Roller<br>
        ----- Modify the Servo -----
     1. Modify the servo for continous rotation [Follow the instruction below]
 <a href="http://www.instructables.com/id/How-to-hack-a-servo-for-continuous-rotation-Towe/?ALLSTEPS">Click here to learn "How to modify a servo for continous rotation?"</a>
-####Software
+#### Software
     1. Clone or Download this repository
     2. Install the runtime environment
     
@@ -50,7 +52,7 @@ Wireless enabled Window Blinds Roller<br>
     7. Navigate to the Script at ../Code/GUIhttpRequest.py   
     8. Edit the Code and change the [self.IP = "xxx.xxx.xxx.xxx"] parameter to the IP recorded (URL without 'http://')
 
-##Usage
+## Usage
        ----- Powering the BlindZer -----
     1. Use USB cable (directly plug into the onboard usb jack of NodeMCU)
     2. Powering using 4 x AA battery through the 2Pin header (see schematic)
@@ -60,16 +62,16 @@ Wireless enabled Window Blinds Roller<br>
     
        ----- Control using Python GUI -----
     1. Run the GUIhttpRequest.py
-##TODO
+## TODO
        ----- Firmware -----
     - Remember current position
     - implement Sleep(); and Weakup();
     
        ----- Python -----
     - Automatically control the BlindZer based on weather/time/Sun Height information
-##Contributing
+## Contributing
     + Fork it
-##Credits
+## Credits
     http://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/  by Magesh Jayakumar
-##License
+## License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
